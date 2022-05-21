@@ -15,6 +15,16 @@ struct LandmarkDetail: View {
         modelData.landmarks.firstIndex(where: { $0.id == landmark.id })!
     }
     
+    func findStateByName(_ name: String) -> CountryState {
+        var theState = CountryState(id: 2000, name: "Not found", description: "The state is missing")
+        modelData.states.forEach { eachState in
+            if eachState.name == name {
+                theState = eachState
+            }
+        }
+        return theState
+    }
+    
     var body: some View {
         ScrollView {
             MapView(coordinate: landmark.locationCoordinate)
@@ -34,7 +44,11 @@ struct LandmarkDetail: View {
                 HStack {
                     Text(landmark.park)
                     Spacer()
-                    Text(landmark.state)
+                    NavigationLink {
+                        StateView(modelData: _modelData, countryState: findStateByName(landmark.state))
+                    } label: {
+                        Text(landmark.state)
+                    }
                 }
                 .font(.subheadline)
                 .foregroundColor(.secondary)
